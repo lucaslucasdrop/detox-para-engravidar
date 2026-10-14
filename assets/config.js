@@ -10,7 +10,7 @@ window.FUNIL = {
   eventoTexto: 'terça-feira, 20/10, às 20h',
 
   // Link do checkout (Hotmart, Kiwify, Eduzz, etc.)
-  checkoutUrl: 'https://SEU-CHECKOUT-AQUI.com',
+  checkoutUrl: 'https://seguroamplopay.com/checkout/cmv8gfqg007nk01q3pg83xaqx?offer=1RCT4SH',
 
   // Parcelamento exibido abaixo do preço. Deixe '' para esconder.
   parcelasTexto: '',
