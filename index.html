@@ -576,8 +576,41 @@
   // ---------------------------------------------------------------
   // Página final (oferta): checkout, contador, barra fixa, revelar ao rolar
   // ---------------------------------------------------------------
-  var ofTimer = null, ofScroll = null, ofObserver = null;
+  var ofTimer = null, ofScroll = null, ofObserver = null, toastTimer = null;
+
+  // Notificações de prova social — SÓ dados reais (depoimentos, números e casos verdadeiros)
+  var TOASTS = [
+    { ico: '💗', t: '+2.249 mulheres', s: 'já começaram o Detox para Engravidar' },
+    { ico: '🤰', t: '"Meu positivo saiu 🙏🙏"', s: 'Aluna que seguiu o protocolo' },
+    { ico: '💚', t: '"Conseguimos o positivo na segunda tentativa"', s: 'Aluna que participou do evento' },
+    { ico: '🎉', t: 'Lucia engravidou naturalmente', s: 'aos 40 e aos 41 anos' },
+    { ico: '🥰', t: '"Estou gravidinha passando para agradecer a nutri"', s: 'Aluna do Detox' },
+    { ico: '🛡️', t: '7 dias de garantia', s: 'Não gostou? Devolvemos 100%' }
+  ];
+  function iniciarToasts() {
+    var lista = TOASTS.slice();
+    if (!eventoPassou() && FUNIL.eventoTexto) lista.push({ ico: '🔴', t: 'Aula ao vivo com a nutri Ana', s: FUNIL.eventoTexto });
+    var box = document.createElement('div');
+    box.className = 'toast'; box.id = 'toast';
+    box.setAttribute('role', 'status');
+    document.body.appendChild(box);
+    var ultimo = -1;
+    function mostrar() {
+      var i; do { i = Math.floor(Math.random() * lista.length); } while (i === ultimo && lista.length > 1);
+      ultimo = i;
+      var n = lista[i];
+      box.innerHTML = '<span class="toast-ico">' + n.ico + '</span><span class="toast-txt"><b>' + n.t + '</b><small>' + n.s + '</small></span><span class="toast-ok">✔</span>';
+      box.classList.add('show');
+      setTimeout(function () { box.classList.remove('show'); }, 4500);
+      toastTimer = setTimeout(mostrar, 9000 + Math.random() * 5000);
+    }
+    toastTimer = setTimeout(mostrar, 3500);
+  }
+
   function pararOferta() {
+    clearTimeout(toastTimer);
+    document.body.classList.remove('sticky-on');
+    var tb = document.getElementById('toast'); if (tb) tb.remove();
     clearInterval(ofTimer);
     if (ofScroll) window.removeEventListener('scroll', ofScroll);
     if (ofObserver) ofObserver.disconnect();
@@ -585,6 +618,7 @@
   }
   function iniciarOferta() {
     track('ViewContent', { content_name: 'Quiz - oferta' });
+    iniciarToasts();
 
     app.querySelectorAll('.js-checkout').forEach(function (bc) {
       bc.href = comParametros(FUNIL.checkoutUrl);
@@ -606,7 +640,7 @@
 
     // Barra fixa aparece depois do primeiro botão
     var sticky = document.getElementById('stickyQ');
-    ofScroll = function () { sticky.classList.toggle('show', window.scrollY > 650); };
+    ofScroll = function () { var on = window.scrollY > 650; sticky.classList.toggle('show', on); document.body.classList.toggle('sticky-on', on); };
     window.addEventListener('scroll', ofScroll, { passive: true });
 
     // Cada cartão aparece com animação quando entra na tela
