@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Programa Solo Fértil 90 Dias</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#c2185b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+</head>
+<body>
+<div class="alert-top">🛑 ESPERA! Seu pedido ainda não terminou…</div>
+<div class="progress-steps"><span class="ok">✓ Compra confirmada</span><span class="now">● Oferta especial</span><span>○ Acesso</span></div>
+
+<section style="padding-top:28px">
+  <div class="wrap">
+    <h1 style="text-align:center">O Detox prepara o solo. Que tal cuidar dele pelos <span class="hl">próximos 90 dias?</span></h1>
+    <div class="card">
+      <p>Parabéns por ter dado o primeiro passo. 💗</p>
+      <p>Mas a Ana sabe de uma coisa: o mais difícil não é começar. <strong>É manter.</strong></p>
+      <p>Lá pela terceira semana, a rotina aperta, o negativo vem, a motivação cai… e muita mulher volta pro velho jeito.</p>
+      <p>Por isso existe o <strong>Programa Solo Fértil 90 Dias:</strong></p>
+      <div class="stack">
+        <div class="item"><div class="ico">🗓️</div><div><h3>Cardápios por fase do ciclo</h3><p>12 semanas de cardápio pronto, sem precisar pensar.</p></div></div>
+        <div class="item"><div class="ico">🎥</div><div><h3>3 aulas extras com a Ana</h3><p>Mês 1: manter a base. Mês 2: intestino e rotina. Mês 3: o emocional da tentante.</p></div></div>
+        <div class="item"><div class="ico">💬</div><div><h3>Grupo de acompanhamento no WhatsApp por 90 dias</h3><p>Pra tirar dúvida e não desistir no meio.</p></div></div>
+        <div class="item"><div class="ico">📋</div><div><h3>Checklist semanal de progresso</h3><p>Pra você enxergar o quanto já avançou.</p></div></div>
+      </div>
+      <p>São 3 ciclos completos com direção, em vez de 3 ciclos tentando no escuro.</p>
+    </div>
+
+    <div class="price-box">
+      <div class="de">Valor normal: R$297</div>
+      <div>Só nesta página, pra quem acabou de entrar no Detox:</div>
+      <div class="por"><small>R$</small>97</div>
+      <div class="parc" id="parcelas"></div>
+      <!-- Cole aqui o script/botão de 1 clique da sua plataforma, se ela exigir -->
+      <a class="btn btn-cta btn-pulse" id="aceitar" href="#">SIM! QUERO OS 90 DIAS DE ACOMPANHAMENTO →</a>
+      <span class="btn-sub">É só um clique. Usamos o mesmo cartão da compra.</span>
+    </div>
+    <a class="link-recusar" id="recusar" href="#">Não, obrigada. Prefiro seguir sozinha depois do Detox.</a>
+  </div>
+</section>
+
+<footer class="site">
+  <p>Material educativo de alimentação e rotina. Não substitui o acompanhamento médico e não garante gravidez. Resultados variam.</p>
+</footer>
+
+<script>
+  var F = window.FUNIL;
+  document.getElementById('aceitar').href = comParametros(F.upsellAceitarUrl);
+  document.getElementById('recusar').href = comParametros(F.upsellRecusarUrl);
+  var p = document.getElementById('parcelas');
+  if (F.upsellParcelasTexto) p.textContent = 'ou ' + F.upsellParcelasTexto; else p.remove();
+</script>
+</body>
+</html>

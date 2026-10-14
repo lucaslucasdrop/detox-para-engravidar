@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detox para Engravidar</title>
+  <meta name="description" content="Descubra o que pode estar travando o seu corpo na hora de receber o positivo.">
+  <meta name="theme-color" content="#c2185b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+</head>
+<body>
+  <header class="quiz-top hidden" id="top">
+    <button class="back" id="back" aria-label="Voltar">‹</button>
+    <div class="progress"><div id="bar"></div></div>
+    <span class="count" id="count"></span>
+  </header>
+
+  <main class="quiz-wrap" id="app"></main>
+
+  <footer class="disclaimer">
+    O Detox para Engravidar é um material educativo de alimentação e rotina. Não é tratamento médico, não substitui o acompanhamento com seu ginecologista e não garante gravidez. Os resultados variam de mulher pra mulher.
+  </footer>
+
+<script>
+(function () {
+  // ---------------------------------------------------------------
+  // Conteúdo do quiz
+  // ---------------------------------------------------------------
+  var STEPS = [
+    { id: 'intro', type: 'intro' },
+    { id: 'identifica', type: 'identify' },
+    { id: 'sobrecarga', type: 'overload' },
+    { id: 'ana', type: 'expert' },
+    { id: 'historia', type: 'story' },
+    { id: 'passo1', type: 'step1' },
+    { id: 'passo2', type: 'step2' },
+    { id: 'positivo', type: 'positive' },
+    { id: 'plano', type: 'plan' },
+    { id: 'proibidos', type: 'forbidden' },
+    { id: 'substituicoes', type: 'swaps' },
+    { id: 'checklist', type: 'checklist' },
+    { id: 'evento', type: 'event' },
+    { id: 'tudo', type: 'offer' },
+    { id: 'depoimentos', type: 'proof' },
+    { id: 'oferta', type: 'price' }
+  ];
+
+  // Para onde a última tela leva (até as próximas telas ficarem prontas)
+  var DESTINO_FINAL = 'vendas.html';
+
+  // ---------------------------------------------------------------
+  // Estado e navegação
+  // ---------------------------------------------------------------
+  var app = document.getElementById('app');
+  var top = document.getElementById('top');
+  var bar = document.getElementById('bar');
+  var count = document.getElementById('count');
+  var back = document.getElementById('back');
+  var history = [];
+  var current = 0;
+
+  function go(i) {
+    history.push(current);
+    current = i;
+    render();
+    window.scrollTo(0, 0);
+  }
+  function next() {
+    if (current >= STEPS.length - 1) { location.href = comParametros(DESTINO_FINAL); return; }
+    go(current + 1);
+  }
+
+  back.addEventListener('click', function () {
+    if (!history.length) return;
+    current = history.pop();
+    render();
+  });
+
+  function updateTop(step) {
+    top.classList.toggle('hidden', step.type === 'intro');
+    bar.style.width = Math.round((current / (STEPS.length - 1)) * 100) + '%';
+    count.textContent = '';
+  }
+
+  // ---------------------------------------------------------------
+  // Telas
+  // ---------------------------------------------------------------
+  function render() {
+    var step = STEPS[current];
+    updateTop(step);
+    clearTimeout(carTimer);
+    pararOferta();
+    var html = '';
+
+    if (step.type === 'intro') {
+      html =
+        '<div class="step hook">' +
+          '<div class="alert-pill"><span class="live-dot"></span>ATENÇÃO, TENTANTE 🚨</div>' +
+          '<h1 class="hook-title">Mais um <span class="neg">NEGATIVO</span>?&nbsp;<span class="heartbeat">💔</span><br>' +
+            'Pare de tentar <span class="grad">no escuro.</span></h1>' +
+          '<p class="hook-sub">Descubra em <strong>60 segundos</strong> o que pode estar <strong class="hl">TRAVANDO</strong> o seu corpo na hora de receber o positivo&nbsp;👇</p>' +
+          '<figure class="hero-img">' +
+            '<img src="img/aluna-cha-revelacao.jpg" alt="Casal abraçado em um chá revelação com fumaça rosa" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="float-hearts" aria-hidden="true"><i>💗</i><i>💖</i><i>🤍</i><i>💗</i><i>💕</i><i>💖</i><i>💗</i></span>' +
+            '<figcaption class="img-badge"><span class="live-dot"></span><b>+2.249</b> mulheres já começaram 💗</figcaption>' +
+          '</figure>' +
+          '<ul class="hook-checks">' +
+            '<li><span>⏱️</span>Menos de 1 minuto</li>' +
+            '<li><span>🎯</span>Passo a passo simples</li>' +
+            '<li><span>🎁</span>100% gratuito</li>' +
+          '</ul>' +
+          '<button class="btn btn-mega" data-next><span>💗 QUERO DESCOBRIR AGORA →</span></button>' +
+          '<p class="micro">🔒 Suas respostas são confidenciais.</p>' +
+        '</div>';
+    }
+
+    else if (step.type === 'identify') {
+      html =
+        '<div class="step identify">' +
+          '<h1 class="id-title">Você está tentando engravidar, mas o <span class="id-pos">POSITIVO</span> não vem?&nbsp;<span class="heartbeat">💔</span></h1>' +
+          '<figure class="id-img">' +
+            '<img src="img/tentante-negativo.jpg" alt="Mulher sentada no sofá olhando um teste de gravidez negativo" onerror="this.parentNode.classList.add(\'missing\')">' +
+          '</figure>' +
+          '<p class="id-sub">Se você se identificou com pelo menos <strong>1 dessas frases</strong>, o próximo passo é pra você&nbsp;👇</p>' +
+          '<button class="btn btn-mega" data-next><span>SIM! ISSO ME INCOMODA MUITO 💔</span></button>' +
+          '<p class="micro">Toque no botão pra continuar 👆</p>' +
+        '</div>';
+    }
+
+    else if (step.type === 'overload') {
+      html =
+        '<div class="step overload">' +
+          '<h1 class="ov-title">Sua <span class="red">dificuldade para engravidar</span> pode estar ligada a um <u>corpo sobrecarregado</u></h1>' +
+          '<p class="ov-sub">Quando o organismo está em <span class="red-u">desequilíbrio</span>, a fertilidade pode ser impactada&nbsp;👇</p>' +
+          '<div class="ov-tags">' +
+            '<span class="ov-tag soft">💔 INFLAMAÇÃO</span>' +
+            '<span class="ov-tag hot">DESEQUILÍBRIO HORMONAL 🔥</span>' +
+          '</div>' +
+          '<article class="ov-card">' +
+            '<header class="ov-head"><span>🔬 ENTENDA O SEU CORPO</span><small>Saúde feminina • Fertilidade</small></header>' +
+            '<div class="ov-body">' +
+              '<h2>Inflamação e desequilíbrios metabólicos podem dificultar a gravidez</h2>' +
+              '<p>Alimentação, inflamação do dia a dia e saúde hormonal fazem parte do <strong>ambiente que o corpo precisa</strong> pra uma gestação acontecer.</p>' +
+            '</div>' +
+            '<figure class="ov-img"><img src="img/corpo-sobrecarregado.jpg" alt="Mulher olhando um teste de gravidez e ilustração do útero e ovários" onerror="this.parentNode.classList.add(\'missing\')"></figure>' +
+            '<ul class="ov-list">' +
+              '<li><span>🍞</span><div><b>Excesso de açúcar e industrializados</b>sobrecarregam o organismo todos os dias</div></li>' +
+              '<li><span>🔥</span><div><b>Inflamação silenciosa</b>aparece como inchaço, cansaço e intestino desregulado</div></li>' +
+              '<li><span>⚖️</span><div><b>Hormônios fora do ritmo</b>deixam o ciclo imprevisível e a tentativa vira loteria</div></li>' +
+            '</ul>' +
+            '<p class="ov-good">✅ A boa notícia: <strong>boa parte disso depende da sua rotina</strong> — e dá pra começar a ajustar já.</p>' +
+          '</article>' +
+          '<button class="btn btn-mega" data-next><span>QUERO DESCOBRIR O QUE ESTÁ SOBRECARREGANDO MEU CORPO →</span></button>' +
+          '<p class="micro">Leva menos de 1 minuto</p>' +
+        '</div>';
+    }
+
+    else if (step.type === 'expert') {
+      html =
+        '<div class="step expert">' +
+          '<div class="ex-pill green">PRAZER, NUTRI ANA PAULA GAVA <span class="wave">👋</span></div>' +
+          '<h1 class="ex-title">Eu criei o protocolo <span class="green-t">Detox para Engravidar</span>&nbsp;<span class="point">👇</span></h1>' +
+          '<div class="ex-pill cream">💚 ESPECIALISTA EM FERTILIDADE</div>' +
+          '<figure class="ex-img">' +
+            '<img src="img/ana-especialista.jpg" alt="Nutricionista Ana Paula Gava com um bebê no colo" onerror="this.parentNode.classList.add(\'missing\')">' +
+          '</figure>' +
+          '<div class="ex-stats">' +
+            '<div><b>16</b><span>profissionais disseram que ela nunca seria mãe</span></div>' +
+            '<div><b>+2.249</b><span>mulheres já começaram o Detox</span></div>' +
+            '<div><b>343 mil</b><span>seguidores no Instagram</span></div>' +
+          '</div>' +
+          '<div class="ex-quote">' +
+            '<p>"Eu sei o que é chorar no banheiro com um teste negativo na mão. Transformei a minha dor em missão: <strong>nenhuma mulher precisa passar por isso sem um mapa.</strong>"</p>' +
+            '<span>— Ana Paula Gava, nutricionista</span>' +
+          '</div>' +
+          '<p class="ex-sub">Agora veja o passo a passo que eu preparei pra <strong>você</strong>&nbsp;👇</p>' +
+          '<button class="btn btn-mega green" data-next><span>💚 QUERO VER O PASSO A PASSO →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'story') {
+      html =
+        '<div class="step story-step">' +
+          '<p class="st-pre">Eu criei o Detox para Engravidar após</p>' +
+          '<h1 class="st-title">ver mulheres sofrerem com a dificuldade de <span class="red">engravidar&nbsp;<span class="heartbeat">💔</span></span></h1>' +
+          '<div class="st-pill"><span class="sparkle">💚</span> Ela tentou engravidar por 8 anos e <strong>hoje está com seu bebê nos braços</strong> <span class="sparkle">💚</span></div>' +
+          '<figure class="st-img">' +
+            '<img src="img/bebe-nos-bracos.jpg" alt="Casal sorrindo com o bebê recém-nascido na maternidade" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="float-hearts" aria-hidden="true"><i>💗</i><i>💚</i><i>🤍</i><i>💗</i><i>💕</i><i>💚</i><i>💗</i></span>' +
+          '</figure>' +
+          '<button class="btn btn-mega green" data-next><span>💚 QUERO COMEÇAR A MINHA HISTÓRIA →</span></button>' +
+          '<p class="micro">Cada corpo é único e os resultados variam de mulher pra mulher.</p>' +
+        '</div>';
+    }
+
+    else if (step.type === 'step1') {
+      html =
+        '<div class="step step1">' +
+          '<div class="p1-pill"><span class="gdot"></span>PASSO 01<span class="gdot"></span></div>' +
+          '<h1 class="p1-title"><span class="red">Desinflame seu corpo</span> e prepare a sua fertilidade</h1>' +
+          '<p class="p1-sub">Você vai receber o protocolo <a>Detox para preparar o corpo para engravidar</a></p>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/protocolo-detox-mockup.jpg" alt="Materiais do Detox para Engravidar: receitas, checklist, cardápio, guia dos proibidos e aulas" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<p class="p1-case">A <u>Dayane</u> engravidou naturalmente aos 43 anos depois de um <span class="p1-tag">PROTOCOLO DETOX</span> 🔥</p>' +
+          '<figure class="p1-photo">' +
+            '<img src="img/aluna-gestante-espelho.jpg" alt="Dayane grávida tirando foto no espelho" onerror="this.parentNode.classList.add(\'missing\')">' +
+          '</figure>' +
+          '<p class="micro" style="margin:-6px 0 18px">Cada corpo é único e os resultados variam de mulher pra mulher.</p>' +
+          '<button class="btn btn-mega green" data-next><span>💚 VER O PASSO 02 →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'step2') {
+      html =
+        '<div class="step step1">' +
+          '<div class="p1-pill"><span class="gdot"></span>PASSO 02<span class="gdot"></span></div>' +
+          '<h1 class="p1-title">Module seu organismo <span class="green-t">e aumente suas chances de engravidar</span></h1>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/ana-cozinha-nutra.jpg" alt="Nutri Ana Paula na cozinha preparando alimentos, com o cardápio e o checklist do protocolo" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'positive') {
+      // Para usar o caso real da Maxlane, troque a imagem por img/maxlane-gestante.jpg
+      // e o subtítulo por: Assim como a Maxlane, que <strong class="green-t">engravidou naturalmente</strong> mesmo desacreditada
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Prepare seu corpo para o <span class="red">positivo!</span>&nbsp;<span class="heartbeat">💗</span></h1>' +
+          '<p class="p1-sub">Mais de 2.249 mulheres já começaram a <strong class="green-t">cuidar da base do corpo</strong> com o Detox</p>' +
+          '<figure class="st-img">' +
+            '<img src="img/gestante-flores.jpg" alt="Gestante sorrindo entre flores" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="float-hearts" aria-hidden="true"><i>💗</i><i>💖</i><i>🌸</i><i>💗</i><i>💕</i><i>🌸</i><i>💗</i></span>' +
+          '</figure>' +
+          '<div class="no-pills">' +
+            '<div class="no-pill">❌ DIAGNÓSTICO NÃO É SENTENÇA</div>' +
+            '<div class="no-pill">❌ CHEGA DE ACHAR QUE É IMPOSSÍVEL</div>' +
+          '</div>' +
+          '<button class="btn btn-mega green" data-next><span>💚 QUERO PREPARAR MEU CORPO →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'plan') {
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Você vai receber um <span class="red">plano alimentar focado em fertilidade</span>&nbsp;<span class="heartbeat">🤩</span></h1>' +
+          '<p class="p1-sub">Com <strong class="green-t">cardápios e receitas detox</strong> 🎁</p>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/plano-alimentar.jpg" alt="Cardápio Base do Detox da Fertilidade e Receitas Detox no tablet e no celular" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<div class="no-pills">' +
+            '<div class="no-pill txt">❌ CHEGA de <b>TERRORISMO</b> alimentar</div>' +
+            '<div class="no-pill txt">❌ CHEGA de <b>DÚVIDAS</b> sobre o que comer</div>' +
+            '<div class="yes-pill">💗 Tenha um plano <b class="g">ORGANIZADO</b> para <b>PREPARAR SEU CORPO</b> para engravidar</div>' +
+          '</div>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'forbidden') {
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Você <s class="strike-red">não precisa</s> viver de <span class="green-t">restrições</span>&nbsp;<span class="heartbeat">💚</span></h1>' +
+          '<p class="p1-sub">Com a <strong class="green-t">lista de "proibidos"</strong> que você vai receber 🎁</p>' +
+          '<div class="no-pills" style="margin:0 0 16px">' +
+            '<div class="no-pill txt">❌ CHEGA de <b>CORTAR</b> tudo o que você gosta</div>' +
+            '<div class="no-pill txt">❌ CHEGA de achar que Detox é passar <b>VONTADE</b></div>' +
+            '<div class="yes-pill">💗 Descubra quais <b class="g">ALIMENTOS</b> podem <b>CONTINUAR</b> fazendo parte do seu Detox</div>' +
+          '</div>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/lista-proibidos.jpg" alt="Lista dos Proibidos no tablet, ao lado de legumes e doces" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'swaps') {
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Você vai <span class="red">saber exatamente</span> <span class="green-t">o que comer todos os dias</span>&nbsp;<span class="heartbeat">💚</span></h1>' +
+          '<div class="no-pills" style="margin:0 0 16px">' +
+            '<div class="no-pill txt">❌ CHEGA de refeições <b>COMPLICADAS</b></div>' +
+            '<div class="no-pill txt">❌ CHEGA de dúvidas sobre <b>ALIMENTAÇÃO</b></div>' +
+            '<div class="yes-pill">💚 <b>FAÇA SUBSTITUIÇÕES SIMPLES</b> sem comprometer seu Detox</div>' +
+          '</div>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/substituicoes.jpg" alt="Lista de substituições de alimentos do Detox para Engravidar no tablet" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<ul class="num-list">' +
+            '<li><span class="num">1️⃣</span><span><b class="g">ALTERNATIVAS PRÁTICAS</b> PARA O DIA A DIA 😋</span></li>' +
+            '<li><span class="num">2️⃣</span><span>MAIS FACILIDADE PARA <b class="g">APLICAR O DETOX</b></span></li>' +
+          '</ul>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'checklist') {
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Você vai ter certeza <span class="red">que está no caminho certo</span>&nbsp;<span class="heartbeat">😍</span></h1>' +
+          '<p class="p1-sub">Com o <strong class="green-t">checklist da tentante</strong> que você vai receber 🎁</p>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/checklist-tentante.jpg" alt="Checklist diário do detox fertilidade no tablet" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<div class="no-pills">' +
+            '<div class="no-pill txt">❌ CHEGA de se sentir <b>PERDIDA</b></div>' +
+            '<div class="no-pill txt">❌ CHEGA de <b>DÚVIDAS</b> sobre o que fazer</div>' +
+            '<div class="yes-pill">💗 Tenha um <b class="g">PASSO A PASSO SIMPLES</b> para <b>APLICAR</b> no dia a dia</div>' +
+          '</div>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'event') {
+      var dataEvento = (!eventoPassou() && window.FUNIL && FUNIL.eventoTexto)
+        ? '<div class="ev-date"><span class="live-dot"></span>AO VIVO: ' + FUNIL.eventoTexto + '</div>' : '';
+      html =
+        '<div class="step step1">' +
+          '<p class="st-pre">🎁 Você vai receber também 🎁</p>' +
+          '<h1 class="p1-title">Participação no evento <span class="green-t">Detox para Engravidar</span>&nbsp;<span class="heartbeat">💗</span></h1>' +
+          dataEvento +
+          '<div class="no-pills" style="margin:0 0 16px">' +
+            '<div class="yes-pill">💚 Você <b>SERÁ GUIADA</b> durante a <b>CONSTRUÇÃO</b> do protocolo Detox.</div>' +
+            '<div class="no-pill txt">❌ CHEGA de informações <b>SOLTAS</b></div>' +
+            '<div class="no-pill txt">❌ CHEGA de <b>TENTAR</b> sem direção</div>' +
+          '</div>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/evento-aula-guiada.jpg" alt="Nutri Ana Paula no evento ao vivo Detox para Engravidar, com aula guiada no notebook" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<button class="btn btn-mega green" data-next><span>💚 CONTINUAR →</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'offer') {
+      html =
+        '<div class="step step1">' +
+          '<h1 class="p1-title">Você vai receber tudo isso no <span class="green-t">Detox para Engravidar</span>&nbsp;<span class="point">👇</span> 🎁</h1>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/tudo-que-recebe.jpg" alt="Todos os materiais do Detox para Engravidar: receitas, checklist, cardápio, lista dos proibidos, substituições e aula" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<ul class="offer-list">' +
+            '<li>📗 PROTOCOLO DE MODULAÇÃO DETOX</li>' +
+            '<li>🥝 CARDÁPIOS E RECEITAS SEM TERRORISMO ALIMENTAR</li>' +
+            '<li>🥕 PLANO ALIMENTAR DETOX FOCADO EM FERTILIDADE</li>' +
+            '<li>🍫 LISTA DOS "PROIBIDOS" QUE PODEM ENTRAR NO DETOX</li>' +
+            '<li>✅ CHECKLIST PARA ORGANIZAR CORPO E ROTINA</li>' +
+            '<li>🎥 AULA EM AMBIENTE FECHADO</li>' +
+          '</ul>' +
+          '<button class="btn btn-mega yellow" data-next><span>RECEBER AGORA ✅</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'proof') {
+      var prints = [
+        ['img/depoimento-1.jpg', 'Mensagem de aluna contando que conseguiu o positivo após seguir o protocolo'],
+        ['img/depoimento-2.jpg', 'Mensagem de aluna grávida agradecendo a nutri Ana'],
+        ['img/depoimento-3.jpg', 'Aluna enviando o resultado positivo do exame'],
+        ['img/depoimento-4.jpg', 'Aluna mostrando teste positivo e agradecendo pelas dicas']
+      ];
+      html =
+        '<div class="step step1">' +
+          '<div class="attn-box">🚨 ATENÇÃO 🚨</div>' +
+          '<h1 class="p1-title attn-title">Você não precisa de mais uma tentativa no escuro!</h1>' +
+          '<div class="no-pills" style="margin:0 0 16px">' +
+            '<div class="no-pill txt">❌ CHEGA de perder tempo com estratégias que não funcionam</div>' +
+            '<div class="no-pill txt">❌ CHEGA de tentar engravidar sem saber se está fazendo certo</div>' +
+          '</div>' +
+          '<div class="carousel" id="car">' +
+            prints.map(function (p) {
+              return '<div class="slide"><img src="' + p[0] + '" alt="' + p[1] + '" loading="lazy"></div>';
+            }).join('') +
+          '</div>' +
+          '<div class="dots" id="dots">' + prints.map(function (p, i) { return '<span' + (i ? '' : ' class="on"') + '></span>'; }).join('') + '</div>' +
+          '<p class="micro" style="margin:0 0 16px">👆 Arraste pro lado • Cada corpo é único e os resultados variam</p>' +
+          '<button class="btn btn-mega red" data-next><span>POR ISSO, PREPARE SEU CORPO ANTES DA PRÓXIMA TENTATIVA!</span></button>' +
+        '</div>';
+    }
+
+    else if (step.type === 'price') {
+      var temEvento = !eventoPassou() && FUNIL.eventoTexto;
+      var blocoUrgencia = temEvento ?
+        '<div class="urg-box">' +
+          '<div class="urg-head"><span class="live-dot"></span>AULA AO VIVO COM A NUTRI ANA</div>' +
+          '<p class="urg-date">📅 ' + FUNIL.eventoTexto + '</p>' +
+          '<div class="countdown sm" id="ofCd"><div><b data-cd="d">00</b><span>dias</span></div><div><b data-cd="h">00</b><span>horas</span></div><div><b data-cd="m">00</b><span>min</span></div><div><b data-cd="s">00</b><span>seg</span></div></div>' +
+          '<p class="urg-note">A aula em ambiente fechado acontece nessa data. Quem entra depois <b>não participa ao vivo.</b></p>' +
+        '</div>' : '';
+      html =
+        '<div class="step step1 offer-page">' +
+          '<section class="of-sec hero-sec">' +
+          '<div class="no-pill txt" style="opacity:1;animation:noPulse 2.4s ease-in-out infinite;margin-bottom:14px"><b>🚨 PREPARE SEU CORPO ANTES DA PRÓXIMA TENTATIVA 🚨</b></div>' +
+          '<h1 class="p1-title">Com o <span class="green-t">Detox para Engravidar</span>&nbsp;<span class="heartbeat">💚</span></h1>' +
+          '<div class="no-pills" style="margin:0 0 16px">' +
+            '<div class="yes-pill c"><b>PREPARE SEU CORPO ANTES DO POSITIVO</b></div>' +
+            '<div class="yes-pill c"><b>REDUZA INFLAMAÇÕES QUE ATRAPALHAM SUA FERTILIDADE</b></div>' +
+            '<div class="yes-pill c"><b>DESCUBRA O QUE AJUSTAR ANTES DA PRÓXIMA TENTATIVA</b></div>' +
+          '</div>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/oferta-preco.jpg" alt="Nutri Ana Paula com bebê no colo e todos os materiais do Detox para Engravidar" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO MEU DETOX AGORA</span></a>' +
+          '<div class="trust-row"><span>🔒 Compra segura</span><span>⚡ Acesso em minutos</span><span>🛡️ 7 dias de garantia</span></div>' +
+          blocoUrgencia +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title">Tudo que você precisa para começar</h2>' +
+          '<figure class="p1-mock">' +
+            '<img src="img/protocolo-detox-mockup.jpg" alt="Materiais do Detox para Engravidar" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span class="p1-shine" aria-hidden="true"></span>' +
+          '</figure>' +
+          '<ul class="check-list">' +
+            '<li>Modulação Detox</li>' +
+            '<li>Plano alimentar Detox focado em fertilidade</li>' +
+            '<li>Cardápios e receitas práticas</li>' +
+            '<li>Lista dos “Proibidos” que podem entrar no detox</li>' +
+            '<li>Checklist para organizar corpo e rotina</li>' +
+            '<li>Aula em ambiente fechado</li>' +
+          '</ul>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>👉 QUERO ESSE DETOX</span></a>' +
+          '<p class="micro">🔒 Pagamento seguro • Acesso imediato no WhatsApp e e-mail • 7 dias de garantia</p>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title">Prepare seu corpo antes da <u>próxima tentativa</u></h2>' +
+          '<p class="p1-sub" style="font-weight:900">Assim como a Lucia que engravidou naturalmente aos <span class="red-t">40 anos e 41 anos</span></p>' +
+          '<figure class="ph-img st-img">' +
+            '<img src="img/lucia.jpg" alt="Lucia grávida com o marido e o filho no chá revelação" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span>[FOTO DA LUCIA]<br>Salve como img/lucia.jpg</span>' +
+          '</figure>' +
+          '<p class="last-call">❌ <b>NÃO ESPERE MAIS UM CICLO PASSAR!</b> A mudança é agora, <b class="red-t">CLIQUE NO BOTÃO</b> e comece a preparar o seu corpo hoje mesmo.</p>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO COMEÇAR AGORA</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title">Você <span class="red">não precisa gastar milhares de reais</span> para <b>começar</b> a se preparar</h2>' +
+          '<div class="no-pill txt" style="opacity:1;margin-bottom:8px;color:#e0201b"><b>SOLUÇÕES CARAS NEM SEMPRE COMEÇAM PELA BASE DO PROBLEMA&nbsp;👇</b></div>' +
+          '<ul class="cost-list">' +
+            '<li><span>SUPLEMENTAÇÃO ALEATÓRIA</span><s>R$800</s></li>' +
+            '<li><span>CONSULTAS SEM PLANO CLARO</span><s>R$1.500</s></li>' +
+            '<li><span>PROTOCOLOS PRONTOS DA INTERNET</span><s>R$500</s></li>' +
+            '<li><span>TENTATIVA SEM PREPARAÇÃO</span><s class="sm">CUSTO EMOCIONAL</s></li>' +
+            '<li><span>ESPERAR MAIS UM CICLO</span><s class="sm">PREÇO INESTIMÁVEL</s></li>' +
+          '</ul>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO COMEÇAR PELA BASE</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title"><span class="price-hl">R$27,90</span> pra você ter uma direção clara para engravidar</h2>' +
+          '<p class="p1-sub" style="font-weight:900">Assim como essa aluna <span class="red-t">que seguiu o protocolo!</span>&nbsp;👇</p>' +
+          '<figure class="ph-img proof-img">' +
+            '<img src="img/depoimento-5.jpg" alt="Mensagem de aluna contando que está grávida" onerror="this.onerror=null;this.src=\'img/depoimento-2.jpg\'">' +
+            '<span>[PRINT: "Meu presente de Deus chegou! Estou grávida…"]<br>Salve como img/depoimento-5.jpg</span>' +
+          '</figure>' +
+          '<p class="last-call" style="text-align:center">❌ <b>SUA PREPARAÇÃO NÃO PODE ESPERAR!</b> Participe do Detox para Engravidar&nbsp;👇</p>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO PARTICIPAR DO DETOX</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title"><span class="price-hl">R$27,90</span> pra parar de se perguntar se está fazendo o certo</h2>' +
+          '<p class="p1-sub" style="font-weight:900">Assim como essa aluna <span class="red-t">que seguiu o protocolo!</span>&nbsp;👇</p>' +
+          '<figure class="ph-img proof-img">' +
+            '<img src="img/depoimento-6.jpg" alt="Mensagens de aluna agradecendo a nutri" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span>[PRINT: "Oii Nutri, muito obrigada…"]<br>Salve como img/depoimento-6.jpg</span>' +
+          '</figure>' +
+          '<p class="last-call" style="text-align:center">❌ <b>SUA PRÓXIMA TENTATIVA MERECE MAIS SEGURANÇA E MENOS DÚVIDA!</b>&nbsp;👇</p>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO MAIS SEGURANÇA</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title"><span class="price-hl">R$27,90</span> pra fazer a próxima tentativa a mais preparada da vida</h2>' +
+          '<p class="p1-sub" style="font-weight:900">Assim como essa aluna <span class="red-t">que seguiu o protocolo!</span>&nbsp;👇</p>' +
+          '<figure class="ph-img proof-img">' +
+            '<img src="img/depoimento-1.jpg" alt="Mensagem de aluna contando que conseguiu o positivo após participar do evento e seguir o protocolo" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span>[PRINT DE DEPOIMENTO]</span>' +
+          '</figure>' +
+          '<p class="last-call" style="text-align:center"><b>PARTICIPE DO DETOX PARA ENGRAVIDAR</b>&nbsp;👇</p>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>👉 QUERO MEU DETOX AGORA</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title">Eu vou te ajudar nessa jornada&nbsp;<span class="heartbeat">💚</span></h2>' +
+          '<figure class="ana-photo">' +
+            '<img src="img/ana-bebe.jpg" alt="Nutricionista Ana Paula Gava com o bebê no colo" onerror="this.onerror=null;this.src=\'img/ana-especialista.jpg\'">' +
+          '</figure>' +
+          '<div class="ana-text">' +
+            '<p>💚 Olá, eu sou Ana Paula Gava e <b>no Detox para Engravidar serei sua nova nutricionista.</b></p>' +
+            '<p>😭 Depois de receber diversos <b>diagnósticos de infertilidade</b> e ouvir de <b>16 profissionais</b> que eu não poderia ser mãe, decidi transformar <u>minha dor em missão.</u></p>' +
+            '<p>👉 Foi aí que eu decidi criar um método focado em preparar o corpo para engravidar por um valor acessível.</p>' +
+            '<p>👉 Hoje, já ajudei <u>centenas de mulheres</u> a realizarem o sonho da maternidade.</p>' +
+          '</div>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO A AJUDA DA ANA</span></a>' +
+
+          '</section><section class="of-sec reveal"><h2 class="p1-title">Perguntas frequentes&nbsp;<span class="point">👇</span></h2>' +
+          '<div class="faq-q">' +
+            '<h3>1️⃣ Eu já tentei de tudo e nada funcionou, <span class="green-t">por que agora seria diferente?</span></h3>' +
+            '<p>👉 Porque para engravidar talvez você tenha ouvido durante anos que bastava <b>tirar o anticoncepcional e tentar</b>.</p>' +
+            '<p>👉 Mas preparar o corpo antes da tentativa é uma etapa que muitas mulheres simplesmente nunca receberam orientação para fazer.</p>' +
+            '<p>👉 O <b>Detox para Engravidar</b> foi criado justamente para ajudar você a organizar essa preparação de forma prática e estruturada, sem achismos e sem terrorismo alimentar.</p>' +
+            '<p>💚🔥 Agora é a sua chance de fazer uma tentativa com mais clareza, direção e preparação.</p>' +
+          '</div>' +
+          '<div class="faq-q">' +
+            '<h3>2️⃣ Como irei <span class="green-t">receber o meu acesso?</span></h3>' +
+            '<p>👉 Após a compra, você receberá um WhatsApp e E-mail com o seu acesso ao <b>DETOX PARA ENGRAVIDAR.</b></p>' +
+            '<p>👉 Todo o material estará disponível para você no dia do evento para construir junto com a nutri Ana.</p>' +
+            '<p>💚🔥 <b>Seu acesso chega em minutos! Não perca tempo, comece agora! 👉 Garanta a sua vaga no <span class="green-t">DETOX PARA ENGRAVIDAR</span></b></p>' +
+          '</div>' +
+
+          '</section><section class="of-sec reveal">' +
+            '<div class="guarantee-q">' +
+              '<div class="seal-q"><b>7</b>DIAS DE<br>GARANTIA</div>' +
+              '<div>' +
+                '<h3>🛡️ Garantia Coração Tranquilo</h3>' +
+                '<p>Entre, abra o material, faça as primeiras receitas. Se em até <b>7 dias</b> você sentir que não é pra você — por <b>qualquer motivo</b> — devolvemos <b>100% do seu dinheiro.</b></p>' +
+                '<p class="g-small">Sem perguntas. Sem burocracia. O risco é todo nosso.&nbsp;🤍</p>' +
+              '</div>' +
+            '</div>' +
+          '</section><section class="of-sec reveal final-sec"><h2 class="p1-title"><span class="point">👇</span>&nbsp;Você tem 2&nbsp;caminhos&nbsp;<span class="point">👇</span></h2>' +
+          '<div class="no-pills" style="margin:0 0 18px">' +
+            '<div class="yes-pill c" style="color:#16a34a"><b>💚 PREPARAR O CORPO ANTES DA PRÓXIMA TENTATIVA E TER DIREÇÃO NA SUA JORNADA</b></div>' +
+            '<div class="no-pill txt" style="color:#e0201b"><b>❌ CONTINUAR FAZENDO AS MESMAS COISAS E ESPERANDO RESULTADOS DIFERENTES</b></div>' +
+          '</div>' +
+          '<figure class="ph-img p1-mock">' +
+            '<img src="img/dois-caminhos.jpg" alt="De um lado, mulher triste com teste negativo; do outro, a mesma mulher grávida e sorrindo" onerror="this.parentNode.classList.add(\'missing\')">' +
+            '<span>[IMAGEM DOS 2 CAMINHOS — espelho]<br>Salve como img/dois-caminhos.jpg</span>' +
+          '</figure>' +
+          '<div class="two-q">' +
+            '<p class="g">✅ NO PRÓXIMO CICLO, VOCÊ ESTARÁ MAIS PRÓXIMA DO SEU POSITIVO?</p>' +
+            '<p class="r">❌ OU CONTINUARÁ CARREGANDO AS MESMAS DÚVIDAS SOBRE O QUE AJUSTAR?</p>' +
+          '</div>' +
+          '<a class="btn btn-mega green js-checkout" href="#"><span>💚 QUERO PREPARAR MEU CORPO</span></a>' +
+          '<p class="micro">🔒 Pagamento seguro • Acesso imediato no WhatsApp e e-mail • 7 dias de garantia</p>' +
+          '<p class="micro">Cada corpo é único e os resultados variam de mulher pra mulher. O Detox não substitui o acompanhamento médico.</p>' +
+          '</section>' +
+        '</div>' +
+        '<div class="sticky-q" id="stickyQ">' +
+          '<div class="in">' +
+            (temEvento ? '<div class="t">Aula ao vivo em<b id="stickyCd">--</b></div>' : '<div class="t">🛡️ 7 dias<b>de garantia</b></div>') +
+            '<a class="btn btn-cta js-checkout" href="#">QUERO MEU DETOX 💚</a>' +
+          '</div>' +
+        '</div>';
+    }
+
+    app.innerHTML = html;
+    bind(step);
+  }
+
+  function bind(step) {
+    var nextBtn = app.querySelector('[data-next]');
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      if (step.type === 'intro') track('ViewContent', { content_name: 'Quiz - início' });
+      if (step.type === 'identify') track('ViewContent', { content_name: 'Quiz - identificação' });
+      if (step.type === 'proof') track('ViewContent', { content_name: 'Quiz - depoimentos' });
+      if (step.type === 'offer') track('ViewContent', { content_name: 'Quiz - tudo que vai receber' });
+      if (step.type === 'event') track('ViewContent', { content_name: 'Quiz - evento ao vivo' });
+      if (step.type === 'checklist') track('ViewContent', { content_name: 'Quiz - checklist da tentante' });
+      if (step.type === 'swaps') track('ViewContent', { content_name: 'Quiz - substituições' });
+      if (step.type === 'forbidden') track('ViewContent', { content_name: 'Quiz - lista dos proibidos' });
+      if (step.type === 'plan') track('ViewContent', { content_name: 'Quiz - plano alimentar' });
+      if (step.type === 'positive') track('ViewContent', { content_name: 'Quiz - prepare para o positivo' });
+      if (step.type === 'step2') track('ViewContent', { content_name: 'Quiz - passo 02 modular' });
+      if (step.type === 'step1') track('ViewContent', { content_name: 'Quiz - passo 01 protocolo' });
+      if (step.type === 'story') track('ViewContent', { content_name: 'Quiz - história 8 anos' });
+      if (step.type === 'expert') track('ViewContent', { content_name: 'Quiz - autoridade Ana' });
+      if (step.type === 'overload') track('ViewContent', { content_name: 'Quiz - corpo sobrecarregado' });
+      next();
+    });
+
+    if (step.type === 'proof') iniciarCarrossel();
+
+    if (step.type === 'price') iniciarOferta();
+  }
+
+  // ---------------------------------------------------------------
+  // Página final (oferta): checkout, contador, barra fixa, revelar ao rolar
+  // ---------------------------------------------------------------
+  var ofTimer = null, ofScroll = null, ofObserver = null;
+  function pararOferta() {
+    clearInterval(ofTimer);
+    if (ofScroll) window.removeEventListener('scroll', ofScroll);
+    if (ofObserver) ofObserver.disconnect();
+    ofScroll = ofObserver = null;
+  }
+  function iniciarOferta() {
+    track('ViewContent', { content_name: 'Quiz - oferta' });
+
+    app.querySelectorAll('.js-checkout').forEach(function (bc) {
+      bc.href = comParametros(FUNIL.checkoutUrl);
+      bc.addEventListener('click', function () { track('InitiateCheckout', { currency: 'BRL' }); });
+    });
+
+    // Contador até a data real do evento (igual pra todo mundo)
+    var alvo = new Date(FUNIL.eventoData).getTime();
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var diff = Math.max(0, alvo - Date.now());
+      var d = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24, m = Math.floor(diff / 6e4) % 60, s = Math.floor(diff / 1e3) % 60;
+      var v = { d: pad(d), h: pad(h), m: pad(m), s: pad(s) };
+      app.querySelectorAll('[data-cd]').forEach(function (el) { el.textContent = v[el.getAttribute('data-cd')]; });
+      var sc = document.getElementById('stickyCd');
+      if (sc) sc.textContent = (d ? d + 'd ' : '') + pad(h) + ':' + pad(m) + ':' + pad(s);
+    }
+    if (!isNaN(alvo) && !eventoPassou()) { tick(); ofTimer = setInterval(tick, 1000); }
+
+    // Barra fixa aparece depois do primeiro botão
+    var sticky = document.getElementById('stickyQ');
+    ofScroll = function () { sticky.classList.toggle('show', window.scrollY > 650); };
+    window.addEventListener('scroll', ofScroll, { passive: true });
+
+    // Cada cartão aparece com animação quando entra na tela
+    var secs = app.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      ofObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); ofObserver.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      secs.forEach(function (s) { ofObserver.observe(s); });
+    } else {
+      secs.forEach(function (s) { s.classList.add('in'); });
+    }
+  }
+
+  // Carrossel de depoimentos: arrastar + troca automática em ordem aleatória
+  var carTimer = null;
+  function iniciarCarrossel() {
+    var car = document.getElementById('car');
+    var dots = document.querySelectorAll('#dots span');
+    var slides = car.querySelectorAll('.slide');
+    var atual = 0;
+    var passo = slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : 1;
+
+    function marcar(i) {
+      atual = i;
+      dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
+      slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    }
+    function irPara(i) {
+      car.scrollTo({ left: i * passo, behavior: 'smooth' });
+      marcar(i);
+    }
+    function sortear() {
+      var i;
+      do { i = Math.floor(Math.random() * slides.length); } while (i === atual && slides.length > 1);
+      return i;
+    }
+    function auto() {
+      clearTimeout(carTimer);
+      // intervalo variável (2,6s a 4s) pra não parecer mecânico
+      carTimer = setTimeout(function () { irPara(sortear()); auto(); }, 2600 + Math.random() * 1400);
+    }
+
+    car.addEventListener('scroll', function () {
+      var i = Math.round(car.scrollLeft / passo);
+      if (i !== atual && slides[i]) marcar(i);
+    }, { passive: true });
+    dots.forEach(function (d, k) { d.addEventListener('click', function () { irPara(k); auto(); }); });
+    car.addEventListener('touchstart', function () { clearTimeout(carTimer); }, { passive: true });
+    car.addEventListener('touchend', auto, { passive: true });
+    car.addEventListener('mouseenter', function () { clearTimeout(carTimer); });
+    car.addEventListener('mouseleave', auto);
+
+    marcar(0);
+    auto();
+  }
+
+  // Atalho pra testar: index.html#tela=oferta abre direto naquela tela
+  var m = location.hash.match(/tela=([\w-]+)/);
+  if (m) STEPS.forEach(function (s, i) { if (s.id === m[1]) current = i; });
+
+  render();
+})();
+</script>
+</body>
+</html>

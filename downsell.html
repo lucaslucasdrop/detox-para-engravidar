@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cardápios Solo Fértil</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#c2185b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+</head>
+<body>
+<div class="progress-steps"><span class="ok">✓ Compra confirmada</span><span class="now">● Última oportunidade</span><span>○ Acesso</span></div>
+
+<section style="padding-top:28px">
+  <div class="wrap">
+    <h1 style="text-align:center">Tudo bem, eu entendo. 🤍</h1>
+    <div class="card">
+      <p>Talvez o grupo e as aulas não sejam pra você agora.</p>
+      <p>Mas eu não quero que você fique sem saber o que comer depois do Detox.</p>
+      <p>Então aqui vai uma última oportunidade: <strong>só as 12 semanas de cardápios por fase do ciclo + a lista de compras de cada semana</strong>, prontos pra seguir.</p>
+      <p>Sem aula, sem grupo — só o essencial pra você não parar.</p>
+    </div>
+
+    <div class="price-box">
+      <div class="de">De R$97</div>
+      <div>Só agora, nesta página:</div>
+      <div class="por"><small>R$</small>47</div>
+      <!-- Cole aqui o script/botão de 1 clique da sua plataforma, se ela exigir -->
+      <a class="btn btn-cta btn-pulse" id="aceitar" href="#">SIM, QUERO SÓ OS CARDÁPIOS POR R$47 →</a>
+      <span class="btn-sub">É só um clique. Usamos o mesmo cartão da compra.</span>
+    </div>
+    <a class="link-recusar" id="recusar" href="#">Não, obrigada. Quero ir pro meu acesso.</a>
+  </div>
+</section>
+
+<footer class="site">
+  <p>Material educativo de alimentação e rotina. Não substitui o acompanhamento médico e não garante gravidez. Resultados variam.</p>
+</footer>
+
+<script>
+  var F = window.FUNIL;
+  document.getElementById('aceitar').href = comParametros(F.downsellAceitarUrl);
+  document.getElementById('recusar').href = comParametros(F.downsellRecusarUrl);
+</script>
+</body>
+</html>
