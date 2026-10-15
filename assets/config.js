@@ -26,5 +26,5 @@ window.FUNIL = {
   crnAna: 'CRN [NÚMERO]',
 
   // ID do Pixel da Meta. Deixe '' para não carregar.
-  pixelId: ''
+  pixelId: '4179005212403936'
 };
